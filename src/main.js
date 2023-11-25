@@ -1,44 +1,52 @@
-$(document).ready(function() {
+var scripts = document.getElementsByTagName('script');
+var myScript = scripts[scripts.length - 1];
 
-  $('.image-popup-vertical-fit').magnificPopup({
-    type: 'image',
-    closeOnContentClick: true,
-    mainClass: 'mfp-img-mobile',
-    image: {
-      verticalFit: true
+var queryString = myScript.src.replace(/^[^\?]+\??/, '');
+
+var params = parseQuery(queryString);
+
+var recruit = 0;
+
+function parseQuery(query) {
+    var Params = {};
+    if (!query) return Params; // return empty object
+    var Pairs = query.split(/[;&]/);
+    for (var i = 0; i < Pairs.length; i++) {
+        var KeyVal = Pairs[i].split('=');
+        if (!KeyVal || KeyVal.length != 2) continue;
+        var key = unescape(KeyVal[0]);
+        var val = unescape(KeyVal[1]);
+        val = val.replace(/\+/g, ' ');
+        Params[key] = val;
     }
-    
-  });
+    return Params;
+}
 
-  $('.image-popup-fit-width').magnificPopup({
-    type: 'image',
-    closeOnContentClick: true,
-    image: {
-      verticalFit: false
-    }
-  });
+function showPubs(id) {
+  if (id == 0) {
+    document.getElementById('pubs').innerHTML = document.getElementById('pubs_by_date').innerHTML;
+    document.getElementById('select0').style = 'color:#f09228';
+    document.getElementById('select1').style = '';
+    document.getElementById('select2').style = '';
+  } else if (id == 1) {
+    document.getElementById('pubs').innerHTML = document.getElementById('pubs_by_selected').innerHTML;
+    document.getElementById('select1').style = 'color:#f09228';
+    document.getElementById('select0').style = '';
+    document.getElementById('select2').style = '';
+  } else {
+    document.getElementById('pubs').innerHTML = document.getElementById('pubs_by_topic').innerHTML;
+    document.getElementById('select2').style = 'color:#f09228';
+    document.getElementById('select0').style = '';
+    document.getElementById('select1').style = '';
+  } 
+}
 
-  $('.image-popup-no-margins').magnificPopup({
-    type: 'image',
-    closeOnContentClick: true,
-    closeBtnInside: false,
-    fixedContentPos: true,
-    mainClass: 'mfp-no-margins mfp-with-zoom', // class to remove default margin from left and right side
-    image: {
-      verticalFit: true
-    },
-    zoom: {
-      enabled: true,
-      duration: 300 // don't foget to change the duration also in CSS
-    }
-  });
 
-  $('.navbar-fixed-top').addClass('opaque');
-  $(window).scroll(function() {
-        if($(this).scrollTop() < 400) {
-            $('.navbar-fixed-top').addClass('opaque');
-      } else {
-            $('.navbar-fixed-top').removeClass('opaque');
-        }
-    });
-});
+function showRecruit() {
+  if (recruit == 0) {
+    document.getElementById('recruit').style='display:inline-block';
+  } else {
+    document.getElementById('recruit').style='display:none';
+  }
+  recruit = 1 - recruit;
+}
